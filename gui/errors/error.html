@@ -1,0 +1,8 @@
+{{define "body"}}
+<h1>{{.Title}}</h1>
+{{with .Data}}
+{{if ne .Message .StatusText }}
+<p>{{.Message}}</p>
+{{end}}
+{{end}}
+{{end}}

@@ -1,0 +1,66 @@
+{{define "body"}}
+<h1>Entry {{.Data.Entry.ID}}</h1>
+<dl>
+        {{with .Data.Entry}}
+        <dt>Type</dt>
+        <dd>{{.Type}}</dd>
+        <dt>Text</dt>
+        <dd>{{.Text}}</dd>
+        <dt>Tags</dt>
+        <dd>
+                {{$Type := .Type}}
+                {{range $t := .Tags}}
+                {{if eq $Type "cmd"}}
+                --{{$t}}
+                {{else}}
+                {{$t}}
+                {{end}}
+                <br />
+                {{else}}
+                -
+                {{end}}
+        </dd>
+        <dt>Extra</dt>
+        <dd>
+                {{range $k, $v := .Extra}}
+                <b>{{$k}}</b>: {{$v}}<br />
+                {{else}}
+                -
+                {{end}}
+        </dd>
+        <dt>PID</dt>
+        <dd>{{.PID}}</dd>
+        <dt>Session ID</dt>
+        <dd>{{.SID}}</dd>
+        <dt>Version</dt>
+        <dd>{{.Version}}</dd>
+        <dt>Operating System</dt>
+        <dd>{{.OS}}</dd>
+        <dt>Architecture</dt>
+        <dd>{{.Arch}}</dd>
+        <dt>Sync Location</dt>
+        <dd>
+                {{with .SyncLocation}}
+                {{if .Bogon}}
+                IP reserved for private use ({{.IP}})
+                {{else}}
+                {{.Address}}
+                {{if .Coordinates}}
+                <small><a href="https://maps.google.com/maps?q={{.Coordinates}}">map</a></small>
+                {{end}}
+                {{if .Organization}}
+                <br />{{.Organization}}
+                {{end}}
+                {{end}}
+                {{end}}
+        </dd>
+
+        <dt>Organization</dt>
+        <dd>{{.SyncLocation.Organization}}</dd>
+        <dt>Synced</dt>
+        <dd>{{.HumanSyncTime}}</dd>
+        <dt>Timestamp</dt>
+        <dd>{{.HumanTimestamp}}</dd>
+        {{end}}
+</dl>
+{{end}}

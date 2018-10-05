@@ -1,0 +1,105 @@
+{{define "body"}}
+<h1>Diagnostics reports</h1>
+<div class="row">
+        <div class="col-md-4">
+                <form action="/diagnostics" method="GET" class="form-inline">
+                        <div class="form-group mr-md-2">
+                                <input class="form-control" type="text" name="id" placeholder="Diagnostics ID">
+                        </div>
+                        <div class="form-group mr-md-2">
+                                <button type="submit" class="btn btn-primary">Open</button>
+                        </div>
+                </form>
+        </div>
+        <div class="col-md-8">
+                <form action="/diagnostics" method="GET" class="form-inline">
+                        <select class="custom-select mr-sm-2" name="op">
+                                {{range $op := .Data.Operators}}
+                                <option value="{{$op}}"{{if eq $.Data.Filter.UsernameOperator $op}} selected="selected"{{end}}>{{title $op}}</option>
+                                {{end}}
+                        </select>
+                        <div class="form-group mr-md-2">
+                                <input class="form-control" type="text" name="username" placeholder="Username" value="{{.Data.Filter.Username}}">
+                        </div>
+                        <div class="form-group mr-md-2">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                        {{if .Data.Filter.Username }}
+                        &nbsp;
+                        <a class="btn btn-danger" href="/diagnostics">Clear</a>
+                        {{end}}
+                        </div>
+                </form>
+        </div>
+</div>
+&nbsp;
+<table class="table table-striped">
+        <thead>
+                <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Timestamp</th>
+                </tr>
+        </thead>
+        <tbody>
+                {{with .Data}}
+                {{range .List }}
+                <tr>
+                        <td><a href="/diagnostics/{{.ID}}">{{.ID}}</a></td>
+                        <td><a href="/diagnostics/?op=equal&username={{.Username}}">{{.Username}}</a></td>
+                        <td>{{.HumanTimestamp}}</td>
+                </tr>
+                {{else}}
+                <tr>
+                        <td>no data</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                </tr>
+                {{end}}
+                {{end}}
+        </tbody>
+        <tfoot>
+                <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Timestamp</th>
+                </tr>
+        </tfoot>
+</table>
+{{with .Data}}
+<div class="row">
+        <div class="col-md-6">
+                {{.Count}} results / {{.MaxPage}} page{{if ne .MaxPage 1}}s{{end}}
+        </div>
+        <div class="col-md-6">
+                <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end">
+                                {{if eq .Filter.Page 1}}
+                                <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Previous</a>
+                                </li>
+                                {{else}}
+                                {{ $previous := add .Filter.Page -1 }}
+                                <li class="page-item">
+                                        <a class="page-link" href="{{paginator .URL $previous}}">Previous</a>
+                                </li>
+                                {{end}}
+                                <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">{{.Filter.Page}}</a>
+                                </li>
+                                {{if eq .Filter.Page .MaxPage}}
+                                <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Next</a>
+                                </li>
+                                {{else}}
+                                {{ $next := add .Filter.Page 1 }}
+                                <li class="page-item">
+                                        <a class="page-link" href="{{paginator .URL $next}}">Next</a>
+                                </li>
+                                {{end}}
+                        </ul>
+                </nav>
+        </div>
+</div>
+{{end}}
+{{end}}

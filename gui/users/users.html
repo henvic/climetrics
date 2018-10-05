@@ -1,0 +1,61 @@
+{{define "body"}}
+<h1>Access Control List</h1>
+<div class="row">
+    <div class="col-md-4">
+        <a href="/users/add" class="btn btn-primary" role="button">Create a new user</a>
+    </div>
+    <div class="col-md-8">
+        <form action="/users" method="GET" class="form-inline">
+            <select class="custom-select mr-sm-2" name="show">
+                {{range $op := .Data.Operators}}
+                <option value="{{$op}}" {{if eq $.Data.Show $op}} selected="selected" {{end}}>{{title $op}}</option>
+                {{end}}
+            </select>
+            <div class="form-group mr-md-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+&nbsp;
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+<tbody>
+{{range $user := .Data.Users}}
+    <tr>
+        <td data-uid={{.UserID}}>
+            {{if eq .Role "revoked"}}
+            <del>{{.Username}}</del>
+            {{else}}
+            {{.Username}}
+            {{end}}
+        </td>
+        <td>
+            {{if eq .Role "revoked"}}
+            <del>{{.Email}}</del>
+            {{else}}
+            {{.Email}}
+            {{end}}
+        </td>
+        <td>{{.Role | lower}}</td>
+        <td><a href="/users/{{.UserID}}">change</a></td>
+    </tr>
+{{end}}
+</tbody>
+<tfoot>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Action</th>
+    </tr>
+</tfoot>
+</table>
+{{end}}

@@ -1,0 +1,28 @@
+{{define "body"}}
+<h1>Add a new user</h1>
+<form method="POST">
+<div class="form-group">
+    <label for="user-create-username">Username</label>
+    <input id="user-create-username" type="text" name="username" placeholder="Username" class="form-control" />
+</div>
+<div class="form-group">
+    <label for="user-create-email">Email</label>
+    <input id="user-create-email" type="email" name="email" placeholder="Email" class="form-control" />
+</div>
+<div class="form-group">
+    <label for="user-create-password">Password</label>
+    <input id="user-create-password" type="password" name="password" autocomplete="new-password" placeholder="Password" class="form-control" />
+</div>
+<div class="form-group">
+    <label for="user-create-role">Role</label>
+    <select id="user-create-role" class="form-control" name="role">
+        <option value="member" selected="selected">Member</option>
+        <option value="admin">Admin</option>
+    </select>
+</div>
+<div class="form-group">
+    {{ .csrfField }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+</form>
+{{end}}

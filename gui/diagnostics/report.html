@@ -1,0 +1,17 @@
+{{define "body"}}
+{{with .Data.Report}}
+<h1>Report {{.ID}}</h1>
+{{end}}
+<dl>
+        {{with .Data.Report}}
+        <dt>Username</dt>
+        <dd><a href="/diagnostics?op=equal&username={{.Username}}">{{.Username}}</a></dd>
+        <dt>Timestamp</dt>
+        <dd>{{.HumanTimestamp}}</dd>
+        <dt>Synced</dt>
+        <dd>{{.HumanSyncTime}}</dd>
+        {{end}}
+        <dt>Report</dt>
+        <dd class="report">{{.Data.Diagnostics}}</dd>
+</dl>
+{{end}}

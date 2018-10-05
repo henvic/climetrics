@@ -1,0 +1,155 @@
+{{define "body"}}
+<h1>Metrics</h1>
+<div class="row">
+        <div class="col-md-12">
+                <form action="/metrics" method="GET" class="form-inline">
+                        <select class="custom-select mr-sm-2" name="type">
+                                <option value="" {{if not $.Data.Filter.Type}} selected="selected" {{end}}>show all</option>
+                                {{range $t := .Data.Types}}
+                                <option value="{{$t.Type}}"{{if eq $.Data.Filter.Type $t.Type}} selected="selected" {{end}}>{{$t.Type}} ({{$t.Number}})</option>
+                                {{end}}
+                        </select>
+                        <div class="form-group mr-md-2">
+                                <input class="form-control" type="text" name="text"
+                                        placeholder="Text" value="{{.Data.Filter.Text}}">
+                        </div>
+                        <div class="form-group mr-md-2">
+                                <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="form-metrics-not-version" name="not-version"{{if $.Data.Filter.NotVersion}} checked{{end}}>
+                                        <label class="form-check-label" for="form-metrics-not-version" aria-label="not version">not</label>
+                                        &nbsp;
+                                </div>
+                                <select class="custom-select mr-sm-2" name="version">
+                                        <option value="" {{if not $.Data.Filter.Version}} selected="selected" {{end}}>all versions</option>
+                                        {{range $v := .Data.Versions}}
+                                        <option value="{{$v}}" {{if eq $.Data.Filter.Version $v}} selected="selected" {{end}}>{{$v}}</option>
+                                        {{end}}
+                                </select>
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                                {{if .Data.Filter.Changed}}
+                                &nbsp;
+                                <a class="btn btn-danger" href="/metrics">Clear</a>
+                                {{end}}
+                        </div>
+                </form>
+        </div>
+</div>
+&nbsp;
+<table class="table table-striped">
+        <thead>
+                <tr>
+                        <th>Type</th>
+                        <th>Text</th>
+                        <th>Tags</th>
+                        <th>Version</th>
+                        <th>Sync Location</th>
+                        <th>Timestamp</th>
+                </tr>
+        </thead>
+        <tbody>
+                {{with .Data}}
+                {{range .List }}
+                <tr>
+                        <td>
+                                {{.Type}}
+                        </td>
+                        <td>
+                                {{.Text}}
+                        </td>
+                        <td>
+                                <small>
+                                {{$Type := .Type}}
+                                {{range $t := .Tags}}
+                                {{if eq $Type "cmd"}}
+                                --{{$t}}
+                                {{else}}
+                                {{$t}}
+                                {{end}}
+                                <br />
+                                {{end}}
+                                </small>
+                        </td>
+                        <td>
+                                {{.Version}}<br />
+                                <small>{{.OS}}/{{.Arch}}</small>
+                        </td>
+                        <td>
+                                {{with .SyncLocation}}
+                                {{if .Bogon}}
+                                IP reserved for private use ({{.IP}})
+                                {{else}}
+                                {{.Address}}
+                                {{if .Coordinates}}
+                                <small><a href="https://maps.google.com/maps?q={{.Coordinates}}">map</a></small>
+                                {{end}}
+                                {{if .Organization}}
+                                <br />{{.Organization}}
+                                {{end}}
+                                {{end}}
+                                {{end}}
+                        </td>
+                        <td>
+                                {{humanizeTime .TimestampDB}}
+                                <small><br /><a href="/metrics/{{.ID}}">details</a></small>
+                        </td>
+                </tr>
+                {{else}}
+                <tr>
+                        <td>no data</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                </tr>
+                {{end}}
+        </tbody>
+        <tfoot>
+                <tr>
+                        <th>Type</th>
+                        <th>Text</th>
+                        <th>Tags</th>
+                        <th>Version</th>
+                        <th>Sync Location</th>
+                        <th>Timestamp</th>
+                </tr>
+        </tfoot>
+        {{end}}
+</table>
+{{with .Data}}
+<div class="row">
+        <div class="col-md-6">
+                {{.Count}} results / {{.MaxPage}} page{{if ne .MaxPage 1}}s{{end}}
+        </div>
+        <div class="col-md-6">
+                <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-end">
+                                {{if eq .Filter.Page 1}}
+                                <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Previous</a>
+                                </li>
+                                {{else}}
+                                {{ $previous := add .Filter.Page -1 }}
+                                <li class="page-item">
+                                        <a class="page-link" href="{{paginator .URL $previous}}">Previous</a>
+                                </li>
+                                {{end}}
+                                <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1">{{.Filter.Page}}</a>
+                                </li>
+                                {{if eq .Filter.Page .MaxPage}}
+                                <li class="page-item disabled">
+                                        <a class="page-link" tabindex="-1">Next</a>
+                                </li>
+                                {{else}}
+                                {{ $next := add .Filter.Page 1 }}
+                                <li class="page-item">
+                                        <a class="page-link" href="{{paginator .URL $next}}">Next</a>
+                                </li>
+                                {{end}}
+                        </ul>
+                </nav>
+        </div>
+</div>
+{{end}}
+{{end}}
