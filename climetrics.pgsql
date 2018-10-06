@@ -16,21 +16,21 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: authentication_role; Type: TYPE; Schema: public; Owner: admin
+-- Name: authentication_role; Type: TYPE; Schema: public; Owner: -
 --
 
 CREATE TYPE public.authentication_role AS ENUM (
@@ -40,29 +40,25 @@ CREATE TYPE public.authentication_role AS ENUM (
 );
 
 
-ALTER TYPE public.authentication_role OWNER TO admin;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: authentication; Type: TABLE; Schema: public; Owner: admin
+-- Name: authentication; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.authentication (
-    user_id uuid NOT NULL,
     username character varying(36) NOT NULL,
     email character varying(254) NOT NULL,
     password character(64) NOT NULL,
-    role public.authentication_role DEFAULT 'member'::public.authentication_role NOT NULL
+    role public.authentication_role DEFAULT 'member'::public.authentication_role NOT NULL,
+    user_id uuid NOT NULL
 );
 
 
-ALTER TABLE public.authentication OWNER TO admin;
-
 --
--- Name: diagnostics; Type: TABLE; Schema: public; Owner: admin
+-- Name: diagnostics; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.diagnostics (
@@ -75,17 +71,15 @@ CREATE TABLE public.diagnostics (
 );
 
 
-ALTER TABLE public.diagnostics OWNER TO admin;
-
 --
--- Name: COLUMN diagnostics.sync_time; Type: COMMENT; Schema: public; Owner: admin
+-- Name: COLUMN diagnostics.sync_time; Type: COMMENT; Schema: public; Owner: -
 --
 
 COMMENT ON COLUMN public.diagnostics.sync_time IS 'original timestamp as received from the user';
 
 
 --
--- Name: geolocation; Type: TABLE; Schema: public; Owner: admin
+-- Name: geolocation; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.geolocation (
@@ -95,10 +89,8 @@ CREATE TABLE public.geolocation (
 );
 
 
-ALTER TABLE public.geolocation OWNER TO admin;
-
 --
--- Name: metrics; Type: TABLE; Schema: public; Owner: admin
+-- Name: metrics; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.metrics (
@@ -121,10 +113,8 @@ CREATE TABLE public.metrics (
 );
 
 
-ALTER TABLE public.metrics OWNER TO admin;
-
 --
--- Name: authentication authentication_email_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: authentication authentication_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.authentication
@@ -132,7 +122,7 @@ ALTER TABLE ONLY public.authentication
 
 
 --
--- Name: authentication authentication_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: authentication authentication_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.authentication
@@ -140,7 +130,7 @@ ALTER TABLE ONLY public.authentication
 
 
 --
--- Name: authentication authentication_user_id_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: authentication authentication_user_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.authentication
@@ -148,7 +138,7 @@ ALTER TABLE ONLY public.authentication
 
 
 --
--- Name: diagnostics diagnostics_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: diagnostics diagnostics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.diagnostics
@@ -156,7 +146,7 @@ ALTER TABLE ONLY public.diagnostics
 
 
 --
--- Name: geolocation geolocation_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: geolocation geolocation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.geolocation
@@ -164,7 +154,7 @@ ALTER TABLE ONLY public.geolocation
 
 
 --
--- Name: metrics metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: metrics metrics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.metrics
@@ -172,14 +162,14 @@ ALTER TABLE ONLY public.metrics
 
 
 --
--- Name: diagnostics_emailx; Type: INDEX; Schema: public; Owner: admin
+-- Name: diagnostics_emailx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX diagnostics_emailx ON public.diagnostics USING btree (username);
 
 
 --
--- Name: metrics_request_idx; Type: INDEX; Schema: public; Owner: admin
+-- Name: metrics_request_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX metrics_request_idx ON public.metrics USING btree (request_id);

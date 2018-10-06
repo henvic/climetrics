@@ -20,7 +20,7 @@ psql climetrics < file.sql
 To generate a new schema you can use:
 
 ```bash
-pg_dump -U username climetrics --schema-only > climetrics.pgsql
+pg_dump -U username climetrics --schema-only --no-owner > climetrics.pgsql
 ```
 
 ## Commands
