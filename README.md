@@ -1,6 +1,6 @@
 # CLI metrics
 
-[![GoDoc](https://godoc.org/github.com/henvic/climetrics?status.svg)](https://godoc.org/github.com/henvic/climetrics) [![Build Status](https://travis-ci.org/henvic/climetrics.svg?branch=master)](https://travis-ci.org/henvic/climetrics) [![Coverage Status](https://coveralls.io/repos/henvic/climetrics/badge.svg)](https://coveralls.io/r/henvic/climetrics) [![![codebeat badge](https://codebeat.co/badges/0f69eea8-4ac2-40f5-9848-e931b5faf186)](https://codebeat.co/projects/github-com-henvic-climetrics-master) [![Go Report Card](https://goreportcard.com/badge/github.com/henvic/climetrics)](https://goreportcard.com/report/github.com/henvic/climetrics)
+[![GoDoc](https://godoc.org/github.com/henvic/climetrics?status.svg)](https://godoc.org/github.com/henvic/climetrics) [![Build Status](https://travis-ci.org/henvic/climetrics.svg?branch=master)](https://travis-ci.org/henvic/climetrics) [![Coverage Status](https://coveralls.io/repos/henvic/climetrics/badge.svg)](https://coveralls.io/r/henvic/climetrics) [![codebeat badge](https://codebeat.co/badges/0f69eea8-4ac2-40f5-9848-e931b5faf186)](https://codebeat.co/projects/github-com-henvic-climetrics-master) [![Go Report Card](https://goreportcard.com/badge/github.com/henvic/climetrics)](https://goreportcard.com/report/github.com/henvic/climetrics)
 
 CLI metrics is a software used for gathering diagnostics and metrics data for the [WeDeploy](https://www.wedeploy.com/) Command-Line Interface tool.
 
