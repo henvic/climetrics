@@ -32,6 +32,8 @@ type Params struct {
 	DSN                string
 	UserSessionPrefix  string
 	SessionStoreSecret string
+
+	ExposeDebug bool
 }
 
 // ProtectedHandler does CSRF protection.
