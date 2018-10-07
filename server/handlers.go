@@ -77,10 +77,11 @@ func (h PublicHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveHTTP(w http.ResponseWriter, r *http.Request) (http.ResponseWriter, *http.Request, us.Session, error) {
-	session, err := SessionStore.Get(r, UserSessionName)
+	var session, err = SessionStore.Get(r, UserSessionName)
 	s := us.Session{}
 
 	if err != nil {
+		deleteSessionCookie(w)
 		return w, r, s, errwrap.Wrapf("session error: {{err}}", err)
 	}
 
@@ -93,6 +94,7 @@ func serveHTTP(w http.ResponseWriter, r *http.Request) (http.ResponseWriter, *ht
 	userID, ok := session.Values["user_id"].(string)
 
 	if !ok {
+		deleteSessionCookie(w)
 		return w, r, s, errors.New("user_id is not a string")
 	}
 
@@ -100,12 +102,18 @@ func serveHTTP(w http.ResponseWriter, r *http.Request) (http.ResponseWriter, *ht
 	u, err = users.Get(r.Context(), userID)
 
 	if err != nil {
+		deleteSessionCookie(w)
 		return w, r, s, errwrap.Wrapf("can't retrieve user info: {{err}}", err)
 	}
 
 	s.User = u
 	ctx := context.WithValue(r.Context(), SessionCtx{}, s)
 	return w, r.WithContext(ctx), s, nil
+}
+
+func deleteSessionCookie(w http.ResponseWriter) {
+	w.Header().Set("Set-Cookie", fmt.Sprintf(
+		"%s=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT", UserSessionName))
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request, s us.Session) {
