@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:9cb749fbb57c0b6c77b4768dc6a05c148d45fd0127248106e6122a5a21eb9631"
+  name = "github.com/antonlindstrom/pgstore"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "a407030ba6d0efd9a1aad3d0cfc18a9b13d2f2e7"
+  version = "1.0.0"
+
+[[projects]]
   branch = "master"
   digest = "1:6f9339c912bbdda81302633ad7e99a28dfa5a639c864061f1929510a9a64aa74"
   name = "github.com/dustin/go-humanize"
@@ -170,6 +178,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/antonlindstrom/pgstore",
     "github.com/dustin/go-humanize",
     "github.com/gorilla/csrf",
     "github.com/gorilla/mux",
