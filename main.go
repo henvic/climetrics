@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	_ "net/http/pprof"
+	"os"
 	"time"
 
 	_ "github.com/henvic/climetrics/modules"
@@ -22,7 +23,13 @@ func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	flag.Parse()
 
-	if params.ExposeDebug {
+	var debug = (os.Getenv("DEBUG") != "")
+
+	if debug {
+		log.StandardLogger().SetLevel(log.DebugLevel)
+	}
+
+	if debug || params.ExposeDebug {
 		go profiler()
 	}
 

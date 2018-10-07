@@ -67,6 +67,8 @@ $ go tool pprof -web http://localhost:8081/debug/pprof/heap
 $ curl http://localhost:8081/debug/vars
 ```
 
+Use environment variable DEBUG=true to set the log level to debug and expose the debug entrypoints described above.
+
 ## Contributing
 You can get the latest CLI source code with `go get -u github.com/henvic/climetrics`
 
