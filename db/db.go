@@ -17,16 +17,17 @@ func Conn() *sqlx.DB {
 }
 
 // Load DB configuration and ping the server.
-func Load(ctx context.Context, dsn string) (err error) {
+func Load(ctx context.Context, dsn string) (*sqlx.DB, error) {
+	var err error
 	db, err = sqlx.Open("postgres", dsn)
 
 	if err != nil {
-		return errwrap.Wrapf("can't open connection to database: {{err}}", err)
+		return nil, errwrap.Wrapf("can't open connection to database: {{err}}", err)
 	}
 
 	if err := db.PingContext(ctx); err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "can't ping database: %v\n", err)
 	}
 
-	return nil
+	return db, nil
 }

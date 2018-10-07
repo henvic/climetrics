@@ -90,6 +90,39 @@ CREATE TABLE public.geolocation (
 
 
 --
+-- Name: http_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.http_sessions (
+    id bigint NOT NULL,
+    key bytea,
+    data bytea,
+    created_on timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    modified_on timestamp with time zone,
+    expires_on timestamp with time zone
+);
+
+
+--
+-- Name: http_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.http_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: http_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.http_sessions_id_seq OWNED BY public.http_sessions.id;
+
+
+--
 -- Name: metrics; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -111,6 +144,13 @@ CREATE TABLE public.metrics (
     sync_location json,
     timestamp_db timestamp with time zone NOT NULL
 );
+
+
+--
+-- Name: http_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.http_sessions ALTER COLUMN id SET DEFAULT nextval('public.http_sessions_id_seq'::regclass);
 
 
 --
@@ -151,6 +191,14 @@ ALTER TABLE ONLY public.diagnostics
 
 ALTER TABLE ONLY public.geolocation
     ADD CONSTRAINT geolocation_pkey PRIMARY KEY (ip);
+
+
+--
+-- Name: http_sessions http_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.http_sessions
+    ADD CONSTRAINT http_sessions_pkey PRIMARY KEY (id);
 
 
 --

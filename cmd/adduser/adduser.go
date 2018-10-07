@@ -30,7 +30,8 @@ func prompt() (string, error) {
 }
 
 func setup(ctx context.Context) error {
-	return db.Load(ctx, dsn)
+	_, err := db.Load(ctx, dsn)
+	return err
 }
 
 type user struct {

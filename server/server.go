@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/antonlindstrom/pgstore"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -22,8 +23,11 @@ import (
 // UserSessionName is used by the cookie
 const UserSessionName = "sclimetrics"
 
+// SessionGCInterval sets the interval for cleaning up old sessions
+const SessionGCInterval = time.Minute * 5
+
 // SessionStore for the cookie store
-var SessionStore *sessions.CookieStore // @todo FileSystem?
+var SessionStore sessions.Store
 
 var router = mux.NewRouter()
 
@@ -131,13 +135,32 @@ func (s *Server) Serve(ctx context.Context, params Params) error {
 	s.ctx = ctx
 	s.params = params
 
-	if err := db.Load(ctx, params.DSN); err != nil {
+	db, err := db.Load(ctx, params.DSN)
+
+	if err != nil {
 		return err
 	}
 
-	SessionStore = sessions.NewCookieStore(
+	var ss *pgstore.PGStore
+	ss, err = pgstore.NewPGStoreFromPool(
+		db.DB,
 		[]byte(params.SessionStoreSecret),
 	)
+
+	if err != nil {
+		return err
+	}
+
+	SessionStore = sessions.Store(ss)
+
+	defer ss.Close()
+
+	// session garbage collector setup (fairly complicated)
+	defer ss.StopCleanup(ss.Cleanup(SessionGCInterval))
+
+	if err != nil {
+		return err
+	}
 
 	return s.http()
 }
