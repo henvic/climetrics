@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"crypto/rand"
 	"fmt"
 	"net"
 	"net/http"
@@ -38,6 +39,8 @@ type Params struct {
 
 // ProtectedHandler does CSRF protection.
 type ProtectedHandler struct {
+	secret []byte
+
 	unsafe map[string]bool
 	m      sync.RWMutex
 }
@@ -58,7 +61,7 @@ func (p *ProtectedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		r = csrf.UnsafeSkipCheck(r)
 	}
 
-	var pr = csrf.Protect([]byte("32-byte-long-auth-key"),
+	var pr = csrf.Protect(p.secret,
 		csrf.Secure(false),
 		csrf.ErrorHandler(csrfErrorHandler{}),
 	)(router)
@@ -68,6 +71,8 @@ func (p *ProtectedHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // Protected handler.
 var Protected = &ProtectedHandler{
+	secret: secret(),
+
 	unsafe: map[string]bool{},
 }
 
@@ -82,6 +87,17 @@ var Instance = &Server{
 func init() {
 	sqlstruct.NameMapper = sqlstruct.ToSnakeCase
 	router.StrictSlash(true)
+}
+
+func secret() []byte {
+	// TODO(henvic): make it stick during restarts
+	b := make([]byte, 32)
+
+	if _, err := rand.Read(b); err != nil {
+		panic(err)
+	}
+
+	return b
 }
 
 // Start server for climetrics
