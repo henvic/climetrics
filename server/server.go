@@ -174,11 +174,12 @@ func getAddr(a string) string {
 // Serve HTTP requests
 func (s *Server) http() error {
 	listener, err := net.Listen("tcp", s.params.Address)
-	log.Infof("Starting server on %v", getAddr(listener.Addr().String()))
 
 	if err != nil {
 		return err
 	}
+
+	log.Infof("Starting server on %v", getAddr(listener.Addr().String()))
 
 	ec := make(chan error, 1)
 
