@@ -158,10 +158,6 @@ func (s *Server) Serve(ctx context.Context, params Params) error {
 	// session garbage collector setup (fairly complicated)
 	defer ss.StopCleanup(ss.Cleanup(SessionGCInterval))
 
-	if err != nil {
-		return err
-	}
-
 	return s.http()
 }
 
