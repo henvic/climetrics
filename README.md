@@ -14,7 +14,7 @@ Create a database named `climetrics` and import the schema to it with:
 
 ```bash
 createdb climetrics
-psql climetrics < file.sql
+psql climetrics < climetrics.pgsql
 ```
 
 To generate a new schema you can use:
@@ -68,6 +68,8 @@ $ curl http://localhost:8081/debug/vars
 ```
 
 Use environment variable DEBUG=true to set the log level to debug and expose the debug entrypoints described above.
+
+Reference: [GoLang: Running a Go binary as a systemd service on Ubuntu 16.04](https://fabianlee.org/2017/05/21/golang-running-a-go-binary-as-a-systemd-service-on-ubuntu-16-04/)
 
 ## Contributing
 You can get the latest CLI source code with `go get -u github.com/henvic/climetrics`
